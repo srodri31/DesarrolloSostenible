@@ -4,6 +4,8 @@ import { MyApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { LoginPage } from '../pages/login/login';
+import { SignupPage } from '../pages/sign-up/sign-up'
+import { ResetPasswordPage } from '../pages/reset-password/reset-password'
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { AuthData } from '../providers/auth-data'
@@ -17,7 +19,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ContactPage,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    SignupPage,
+    ResetPasswordPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -29,7 +33,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ContactPage,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    SignupPage,
+    ResetPasswordPage
   ],
   providers: [
     StatusBar,

@@ -1,5 +1,5 @@
 import { 
-  NavController, NavParams,
+  NavController,
   LoadingController, 
   AlertController } from 'ionic-angular';
 import { Component } from '@angular/core';
