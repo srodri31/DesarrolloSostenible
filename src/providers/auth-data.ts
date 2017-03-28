@@ -9,6 +9,7 @@ export class AuthData {
   // Here we declare the variables we'll be using.
   public fireAuth: any;
   public userProfile: any;
+  public user: any;
 
   constructor(public http: Http) {
     var config = {
@@ -20,7 +21,11 @@ export class AuthData {
       };
     firebase.initializeApp(config);
     this.fireAuth = firebase.auth();
+    firebase.auth().onAuthStateChanged((user) => {
+        this.user = user;
+    });
     this.userProfile = firebase.database().ref('/userProfile');
+    
   }
 
   loginUser(email: string, password: string): firebase.Promise<any> {
