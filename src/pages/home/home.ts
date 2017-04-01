@@ -12,9 +12,11 @@ export class HomePage {
  
   @ViewChild('map') mapElement: ElementRef;
   map: any;
+  labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //label for the marker
+  labelIndex = 0;
  
   constructor(public navCtrl: NavController) {
- 
+    
   }
  
   ionViewDidLoad(){
@@ -39,24 +41,31 @@ export class HomePage {
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
  
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
+      let mapEle = document.getElementById('map');
+      this.map = new google.maps.Map(mapEle, mapOptions);
       var infoWindow = new google.maps.InfoWindow({map: this.map});
       infoWindow.setPosition(pos);
       infoWindow.setContent('You are here');
-  
+
+      //Add listener to add markers
+      google.maps.event.addListener(this.map, 'click', (event) => {
+        this.addMarker(event.latLng);
+      });
+
     }, (err) => {
       console.log(err);
     });
  
   }
 
-  addMarker(){
+  addMarker(location){
  
     let marker = new google.maps.Marker({
       map: this.map,
+      label: this.labels[this.labelIndex++ % this.labels.length],
       animation: google.maps.Animation.DROP,
-      position: this.map.getCenter()
+      position: location
+
     });
   
     let content = "<h4>Information!</h4>";          
@@ -67,13 +76,13 @@ export class HomePage {
 
   addInfoWindow(marker, content){
  
-  let infoWindow = new google.maps.InfoWindow({
-    content: content
-  });
- 
-  google.maps.event.addListener(marker, 'click', () => {
-    infoWindow.open(this.map, marker);
-  });
- 
-}
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+  
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
+  
+  }
 }
