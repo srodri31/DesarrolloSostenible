@@ -17,6 +17,7 @@ export class HomePage {
   labelIndex = 0;
   origin: any;
   destination: any;
+  directionsDisplay: any;
  
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
     
@@ -49,6 +50,8 @@ export class HomePage {
       infoWindow.setPosition(pos);
       infoWindow.setContent('You are here');
 
+      this.directionsDisplay = new google.maps.DirectionsRenderer();
+      this.directionsDisplay.setMap(this.map);
       //Add listener to add markers
       google.maps.event.addListener(this.map, 'click', (event) => {
         this.addMarker(event.latLng);
@@ -118,13 +121,31 @@ export class HomePage {
           var element = results[j];
           var distance = element.distance.text;
           var duration = element.duration.text;
-          var from = origins[i];
-          var to = destinations[j];
-          console.log('Distance:'+distance);
+          console.log('Distance:'+distance+' Duration: '+duration);
         }
       }
     }
 
+  }
+
+  calcDurationRideBicycle(distance): any{
+    var speed = 16.89; //average speed in km
+    var duration = distance/speed;
+    return duration;
+  }
+
+  calcRoute(travelMode){
+    var directionsService = new google.maps.DirectionsService();
+    var request = {
+    origin: this.origin,
+    destination: this.destination,
+    travelMode: travelMode
+    };
+    directionsService.route(request, (result, status) => {
+      if (status == 'OK') {
+        this.directionsDisplay.setDirections(result);
+      }
+    });
   }
 
   showAlert(message) {
@@ -153,6 +174,7 @@ export class HomePage {
       text: 'OK',
       handler: data => {
         this.goTo(data);
+        this.calcRoute(data);
       }
     });
     alert.present();
