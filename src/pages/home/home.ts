@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
+import { ResultsPage } from '../results/results';
 
 declare var google;
  
@@ -18,9 +19,10 @@ export class HomePage {
   origin: any;
   destination: any;
   directionsDisplay: any;
+  contMachete: any;
  
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
-    
+    this.contMachete = 0; 
   }
  
   ionViewDidLoad(){
@@ -50,6 +52,7 @@ export class HomePage {
       infoWindow.setPosition(pos);
       infoWindow.setContent('You are here');
 
+      //Add renderer to draw route
       this.directionsDisplay = new google.maps.DirectionsRenderer();
       this.directionsDisplay.setMap(this.map);
       //Add listener to add markers
@@ -93,7 +96,8 @@ export class HomePage {
   
   }
 
-  goTo(travelMode){
+  goTo(travelMode): any{
+    var res;
     if(this.destination){
       var service = new google.maps.DistanceMatrixService();
       service.getDistanceMatrix(
@@ -104,18 +108,21 @@ export class HomePage {
           avoidHighways: false,
           avoidTolls: false,
         }, (response, status) => {
-          this.parcingDistanceResults(response, status, travelMode);
+          res = this.parcingDistanceResults(response, status);
         });
+        return res;
     }else{
       this.showAlert('First you have to mark a destination','Warning');
+      return null;
     }
   }
 
-  parcingDistanceResults(response, status, travelMode){
+  parcingDistanceResults(response, status): any{
     if (status == google.maps.DistanceMatrixStatus.OK) {
       var origins = response.originAddresses;
       var destinations = response.destinationAddresses;
-      
+      var res;
+
       for (var i = 0; i < origins.length; i++) {
         var results = response.rows[i].elements;
         for (var j = 0; j < results.length; j++) {
@@ -123,27 +130,17 @@ export class HomePage {
           var distance = element.distance.text;
           var duration = element.duration.text;
           console.log('Distance:'+distance+' Duration: '+duration);
-          var co2Emissions;
-          console.log(travelMode);
-          if(travelMode){
-            switch(travelMode){
-              case google.maps.TravelMode.WALKING:
-                co2Emissions = 0;
-                break;
-              case google.maps.TravelMode.DRIVING:
-                co2Emissions = 300;
-                break;
-            }
-          }
           var len = distance.length;
           distance = distance.substring(0, len-3);
-
-          console.log('emissions '+co2Emissions);
-          var Tco2Emissions = Number(distance) * co2Emissions;
-          console.log('total emissions '+Tco2Emissions);
-          var message = 'The total of emissions of CO2 are '+Tco2Emissions;
-          var title = 'Information';
-          this.showAlert(message, title);
+          res = {
+            distance: distance,
+            duration: duration
+          }
+          this.contMachete++;
+          this.navCtrl.push(ResultsPage, {
+              resWalking: res
+          })
+          return res;
         }
       }
     }
@@ -195,7 +192,15 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             console.log('Agree clicked');
-            this.selectKindTransport();
+            let resDriving;
+            let resWalking;
+            resWalking = this.goTo(google.maps.TravelMode.WALKING);
+            //resDriving = this.goTo(google.maps.TravelMode.DRIVING);
+            /*this.navCtrl.push(ResultsPage, {
+              resWalking: this.goTo(google.maps.TravelMode.WALKING),
+              resDriving: this.goTo(google.maps.TravelMode.DRIVING)
+            })*/
+            //this.selectKindTransport();
           }
         }
       ]
@@ -221,7 +226,7 @@ export class HomePage {
       text: 'OK',
       handler: data => {
         this.goTo(data);
-        this.calcRoute(data);
+        //this.calcRoute(data);
       }
     });
     alert.present();
