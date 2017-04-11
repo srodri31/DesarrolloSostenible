@@ -176,17 +176,27 @@ export class HomePage {
           this.navCtrl.push(ResultsPage, {
               resWalking: res1,
               resDriving: res2,
-              resBycicling: res3
+              resBicycling: res3
           })
     }
 
   }
 
   calcDurationRideBicycle(distance): any{
-    var speed = 16.89; //average speed in km/h
+    var durationText = '';
+    var speed = 13; //average speed in km/h
     //duration in meters
     var duration = distance/(speed*1000); //convert km to m
-    return duration;
+    if(duration >= 60){
+      console.log('duration in bike is greater than 1 h');
+      var hours = Math.floor(duration);
+      durationText = hours + ' h ';
+      duration = duration - hours;
+    }
+    duration = duration * 60; //convert h to min
+    var min = Math.floor(duration);
+    durationText = durationText + min + ' min';
+    return durationText;
   }
 
   calcRoute(travelMode){
