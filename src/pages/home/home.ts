@@ -19,10 +19,9 @@ export class HomePage {
   origin: any;
   destination: any;
   directionsDisplay: any;
-  contMachete: any;
  
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
-    this.contMachete = 0; 
+    
   }
  
   ionViewDidLoad(){
@@ -96,60 +95,97 @@ export class HomePage {
   
   }
 
-  goTo(travelMode): any{
-    var res;
+  goTo(){
     if(this.destination){
+      console.log('Distance matrix');
       var service = new google.maps.DistanceMatrixService();
       service.getDistanceMatrix(
         {
           origins: [this.origin],
           destinations: [this.destination],
-          travelMode: travelMode,
+          travelMode: google.maps.TravelMode.WALKING,
           avoidHighways: false,
           avoidTolls: false,
-        }, (response, status) => {
-          res = this.parcingDistanceResults(response, status);
+        }, (response1, status1) => {
+          console.log('Results part 1');
+          service.getDistanceMatrix(
+          {
+            origins: [this.origin],
+            destinations: [this.destination],
+            travelMode: google.maps.TravelMode.DRIVING,
+            avoidHighways: false,
+            avoidTolls: false,
+          }, (response2, status2) => {
+            console.log('Results part 2');
+            this.parcingDistanceResults(response1, response2, status1, status2);
+          });
         });
-        return res;
     }else{
       this.showAlert('First you have to mark a destination','Warning');
-      return null;
     }
   }
 
-  parcingDistanceResults(response, status): any{
-    if (status == google.maps.DistanceMatrixStatus.OK) {
-      var origins = response.originAddresses;
-      var destinations = response.destinationAddresses;
-      var res;
+  parcingDistanceResults(response1, response2, status1, status2){
+    if (status1 == google.maps.DistanceMatrixStatus.OK) {
+      var origins = response1.originAddresses;
+      var destinations = response1.destinationAddresses;
+      var res1, res2, res3;
 
       for (var i = 0; i < origins.length; i++) {
-        var results = response.rows[i].elements;
+        var results = response1.rows[i].elements;
+        for (var j = 0; j < results.length; j++) {
+          var element = results[j];
+          var distance = element.distance.text;
+          var distanceValue = element.distance.value;
+          var duration = element.duration.text;
+          console.log('Walking: Distance:'+distance+' Duration: '+duration);
+          var len = distance.length;
+          //distance = distance.substring(0, len-3);
+          res1 = {
+            distance: distance,
+            duration: duration
+          }
+          
+          res3 = {
+            distance: distance,
+            duration: this.calcDurationRideBicycle(distanceValue)
+          }
+
+          console.log('Driving: Distance:'+distance+' Duration: '+this.calcDurationRideBicycle(distanceValue));
+
+        }
+      }
+
+      for (var i = 0; i < origins.length; i++) {
+        var results = response2.rows[i].elements;
         for (var j = 0; j < results.length; j++) {
           var element = results[j];
           var distance = element.distance.text;
           var duration = element.duration.text;
-          console.log('Distance:'+distance+' Duration: '+duration);
+          console.log('Driving: Distance:'+distance+' Duration: '+duration);
           var len = distance.length;
-          distance = distance.substring(0, len-3);
-          res = {
+          //distance = distance.substring(0, len-3);
+          res2 = {
             distance: distance,
             duration: duration
           }
-          this.contMachete++;
-          this.navCtrl.push(ResultsPage, {
-              resWalking: res
-          })
-          return res;
+          
         }
       }
+
+          this.navCtrl.push(ResultsPage, {
+              resWalking: res1,
+              resDriving: res2,
+              resBycicling: res3
+          })
     }
 
   }
 
   calcDurationRideBicycle(distance): any{
-    var speed = 16.89; //average speed in km
-    var duration = distance/speed;
+    var speed = 16.89; //average speed in km/h
+    //duration in meters
+    var duration = distance/(speed*1000); //convert km to m
     return duration;
   }
 
@@ -192,9 +228,7 @@ export class HomePage {
           text: 'Agree',
           handler: () => {
             console.log('Agree clicked');
-            let resDriving;
-            let resWalking;
-            resWalking = this.goTo(google.maps.TravelMode.WALKING);
+            this.goTo();
             //resDriving = this.goTo(google.maps.TravelMode.DRIVING);
             /*this.navCtrl.push(ResultsPage, {
               resWalking: this.goTo(google.maps.TravelMode.WALKING),
@@ -225,7 +259,7 @@ export class HomePage {
     alert.addButton({
       text: 'OK',
       handler: data => {
-        this.goTo(data);
+        //this.goTo(data);
         //this.calcRoute(data);
       }
     });

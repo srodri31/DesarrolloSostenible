@@ -15,10 +15,12 @@ export class ResultsPage {
 
   resWalking: any;
   resDriving: any;
+  resBicycling: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.resWalking = this.navParams.get('resWalking');
-    //this.resDriving = this.navParams.get('resDriving');
+    this.resDriving = this.navParams.get('resDriving');
+    this.resBicycling = this.navParams.get('resBicycling');
   }
 
   ionViewDidLoad() {
