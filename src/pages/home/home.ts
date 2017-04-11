@@ -135,10 +135,9 @@ export class HomePage {
         var results = response1.rows[i].elements;
         for (var j = 0; j < results.length; j++) {
           var element = results[j];
-          var distance = element.distance.text;
-          var distanceValue = element.distance.value;
+          var distance = element.distance;
           var duration = element.duration.text;
-          console.log('Walking: Distance:'+distance+' Duration: '+duration);
+          console.log('Walking: Distance:'+distance.text+' Duration: '+duration);
           var len = distance.length;
           //distance = distance.substring(0, len-3);
           res1 = {
@@ -148,10 +147,10 @@ export class HomePage {
           
           res3 = {
             distance: distance,
-            duration: this.calcDurationRideBicycle(distanceValue)
+            duration: this.calcDurationRideBicycle(distance.value)
           }
 
-          console.log('Driving: Distance:'+distance+' Duration: '+this.calcDurationRideBicycle(distanceValue));
+          console.log('Driving: Distance:'+distance.text);
 
         }
       }
@@ -160,9 +159,9 @@ export class HomePage {
         var results = response2.rows[i].elements;
         for (var j = 0; j < results.length; j++) {
           var element = results[j];
-          var distance = element.distance.text;
+          var distance = element.distance;
           var duration = element.duration.text;
-          console.log('Driving: Distance:'+distance+' Duration: '+duration);
+          console.log('Driving: Distance:'+distance.text+' Duration: '+duration);
           var len = distance.length;
           //distance = distance.substring(0, len-3);
           res2 = {

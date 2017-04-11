@@ -18,7 +18,7 @@
     <ion-item>
     <ion-icon name="swap" item-left></ion-icon>
     Distance 
-    <ion-badge item-right>{{resWalking.distance}}</ion-badge>
+    <ion-badge item-right>{{resWalking.distance.text}}</ion-badge>
     </ion-item>
     <ion-item>
     <ion-icon name="stopwatch" item-left></ion-icon>
@@ -42,12 +42,22 @@
     <ion-item>
     <ion-icon name="swap" item-left></ion-icon>
     Distance 
-    <ion-badge item-right>{{resDriving.distance}}</ion-badge>
+    <ion-badge item-right>{{resDriving.distance.text}}</ion-badge>
     </ion-item>
     <ion-item>
     <ion-icon name="stopwatch" item-left></ion-icon>
     Duration 
     <ion-badge item-right>{{resDriving.duration}}</ion-badge>
+    </ion-item>
+    <ion-item>
+    <ion-icon name="car" item-left></ion-icon>
+    CO2 emissions 
+    <ion-badge color="danger" item-right>{{DrivingValues.CO2Emissions.text}}</ion-badge>
+    </ion-item>
+    <ion-item>
+    <ion-icon name="logo-usd" item-left></ion-icon>
+    Cost
+    <ion-badge item-right>{{DrivingValues.cost}}</ion-badge>
     </ion-item>
   </ion-card-content>
 </ion-card>
@@ -61,7 +71,7 @@
     <ion-item>
     <ion-icon name="swap" item-left></ion-icon>
     Distance 
-    <ion-badge item-right>{{resBicycling.distance}}</ion-badge>
+    <ion-badge item-right>{{resBicycling.distance.text}}</ion-badge>
     </ion-item>
     <ion-item>
     <ion-icon name="stopwatch" item-left></ion-icon>
