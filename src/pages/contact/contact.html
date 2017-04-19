@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      Contact
+      My stats
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="logOut()">
@@ -16,13 +16,9 @@
 
 <ion-content>
   <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
+    <ion-list-header>Here are your stats</ion-list-header>
     <ion-item>
-      <ion-icon name="ionic" item-left></ion-icon>
-      @ionicframework
-    </ion-item>
-    <ion-item>
-      <ion-icon name="ionic" item-left></ion-icon>
+      <ion-icon name="mail" item-left></ion-icon>
       {{user.email}}
     </ion-item>
   </ion-list>

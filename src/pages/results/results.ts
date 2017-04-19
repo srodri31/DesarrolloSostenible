@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
+declare var google;
 /*
   Generated class for the Results page.
 
@@ -13,18 +14,26 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class ResultsPage {
 
+  origin: any;
+  destination: any;
   resWalking: any;
   resDriving: any;
   resBicycling: any;
   DrivingValues: any;
+  //for segment in view
+  travelMode: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.travelMode = 'walking';
+    this.origin = this.navParams.get('origin');
+    this.destination = this.navParams.get('destination');
     this.resWalking = this.navParams.get('resWalking');
     this.resDriving = this.navParams.get('resDriving');
     this.resBicycling = this.navParams.get('resBicycling');
     this.DrivingValues = {
       CO2Emissions: this.calcCO2Emissions('DRIVING', this.resDriving.distance.value),
-      cost: this.calcMoneySpent('DRIVING', this.resDriving.distance.value)
+      cost: this.calcMoneySpent('DRIVING', this.resDriving.distance.value),
+      gas: this.calcGasoline(this.resDriving.distance.value)
     };
   }
 
@@ -49,15 +58,18 @@ export class ResultsPage {
   }
 
   calcGasoline(distance){
-    return distance * 20; // change value
+    var mpg = 23.6; //miles per gallon
+    var gkm = 1/mpg/1.60394; //gallon per km
+    var totalgkm = distance/1000 * gkm;
+    return totalgkm.toFixed(2) + ' gallons'; 
   }
 
   calcMoneySpent(travelMode, distance): any{
     if(travelMode == 'DRIVING'){
       var mpg = 23.6; //miles per gallon
-      var gkm = 1/(mpg*1.60394); //gallon per km
+      var gkm = 1/mpg/1.60394; //gallon per km
       var priceGallon = 8332; //pesos, from http://www.portafolio.co/economia/precios-de-la-gasolina-para-marzo-de-2017-503706
-      var cost = priceGallon * gkm * distance/1000;
+      var cost = priceGallon * (gkm * distance/1000);
       return '$'+ Math.ceil(cost);
     }
     return null;
@@ -66,7 +78,5 @@ export class ResultsPage {
   calcCaloriesBurn(distance){
     return distance * 20; //change value
   }
-
-
 
 }

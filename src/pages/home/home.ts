@@ -57,7 +57,7 @@ export class HomePage {
       //Add listener to add markers
       google.maps.event.addListener(this.map, 'click', (event) => {
         this.addMarker(event.latLng);
-        this.confirmationAlert();
+        this.selectOption();
         this.destination = event.latLng;
       });
 
@@ -77,9 +77,14 @@ export class HomePage {
 
     });
   
-    let content = "Information!";          
+    //Add event to marker
+    google.maps.event.addListener(marker, 'click', () => {
+      this.selectOption();
+    });
+
+    //let content = "<button type=\"button\" onclick=\"goTo()\">Click Me!</button>";          
   
-    this.addInfoWindow(marker, content);
+    //this.addInfoWindow(marker, content);
   
   }
 
@@ -95,6 +100,7 @@ export class HomePage {
   
   }
 
+  //to calculate distance and duration
   goTo(){
     if(this.destination){
       console.log('Distance matrix');
@@ -175,7 +181,9 @@ export class HomePage {
           this.navCtrl.push(ResultsPage, {
               resWalking: res1,
               resDriving: res2,
-              resBicycling: res3
+              resBicycling: res3,
+              origin: this.origin,
+              destination: this.destination
           })
     }
 
@@ -198,6 +206,7 @@ export class HomePage {
     return durationText;
   }
 
+  //to show route on map
   calcRoute(travelMode){
     var directionsService = new google.maps.DirectionsService();
     var request = {
@@ -270,6 +279,33 @@ export class HomePage {
       handler: data => {
         //this.goTo(data);
         //this.calcRoute(data);
+      }
+    });
+    alert.present();
+  }
+
+  selectOption() {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('What do you want to do?');
+
+    var info = {type: 'radio', label: 'See info', value: 'info', checked: true};
+    var route = {type: 'radio', label: 'See route', value: 'route'};
+
+    alert.addInput(info);
+    alert.addInput(route);
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        switch(data){
+          case 'info':
+            this.goTo();
+            break;
+          case 'route':
+            this.calcRoute(google.maps.TravelMode.WALKING);
+            break;
+        }
       }
     });
     alert.present();
