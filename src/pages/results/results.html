@@ -18,10 +18,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div [(ngSwitch)]="travelMode">
+<ion-content [(ngSwitch)]="travelMode">
+
     <ion-card *ngSwitchCase="'walking'">
-    <img src="https://regmedia.co.uk/2016/07/20/walking_fingers.jpg?x=648&y=348&crop=1"/>
+    <!--<img src="../../assets/img/walking_fingers.jpg"/> -->
     <ion-card-content>
       <ion-card-title>
         By walking
@@ -42,6 +42,11 @@
       <ion-badge color="secondary" item-right>0</ion-badge>
       </ion-item>
       <ion-item>
+      <ion-icon name="medical" item-left></ion-icon>
+      Calories
+      <ion-badge color="secondary" item-right>Muchas</ion-badge>
+      </ion-item>
+      <ion-item>
       <ion-icon name="logo-usd" item-left></ion-icon>
       Cost
       <ion-badge color="secondary" item-right>0</ion-badge>
@@ -50,7 +55,7 @@
   </ion-card>
 
   <ion-card *ngSwitchCase="'bicycling'">
-    <img src="http://cdn.mos.bikeradar.imdserve.com/images/news/2008/07/28/cycling-knee-pain-causes-and-solutions-1476356582663-klha1cu5u9z7-630-80.jpg"/>
+    <!-- <img src="http://cdn.mos.bikeradar.imdserve.com/images/news/2008/07/28/cycling-knee-pain-causes-and-solutions-1476356582663-klha1cu5u9z7-630-80.jpg"/> -->
     <ion-card-content>
       <ion-card-title>
         By bicycling
@@ -79,12 +84,12 @@
   </ion-card>
 
   <ion-card *ngSwitchCase="'driving'">
-    <img src="https://transportation-forms.stanford.edu/images/commute_solo1.jpg"/>
+    <!--<img src="https://transportation-forms.stanford.edu/images/commute_solo1.jpg"/> -->
     <ion-card-content>
       <ion-card-title>
         By driving
       </ion-card-title>
-      <ion-item>
+       <ion-item>
       <ion-icon name="swap" item-left></ion-icon>
       Distance 
       <ion-badge item-right>{{resDriving.distance.text}}</ion-badge>
@@ -94,23 +99,42 @@
       Duration 
       <ion-badge item-right>{{resDriving.duration}}</ion-badge>
       </ion-item>
-      <ion-item>
-      <ion-icon name="car" item-left></ion-icon>
-      CO2 emissions 
-      <ion-badge color="danger" item-right>{{DrivingValues.CO2Emissions.text}}</ion-badge>
-      </ion-item>
-      <ion-item>
-      <ion-icon name="timer" item-left></ion-icon>
-      Gas
-      <ion-badge item-right>{{DrivingValues.gas}}</ion-badge>
-      </ion-item>
-      <ion-item>
-      <ion-icon name="logo-usd" item-left></ion-icon>
-      Cost
-      <ion-badge item-right>{{DrivingValues.cost}}</ion-badge>
-      </ion-item>
+
+      <ion-list>
+        <ion-list-header>
+          Gasoline car
+        </ion-list-header>
+        <ion-item>
+        <ion-icon name="car" item-left></ion-icon>
+        CO2 emissions 
+        <ion-badge color="danger" item-right>{{DrivingValues.CO2Emissions.text}}</ion-badge>
+        </ion-item>
+        <ion-item>
+        <ion-icon name="timer" item-left></ion-icon>
+        Gas
+        <ion-badge item-right>{{DrivingValues.gas}}</ion-badge>
+        </ion-item>
+        <ion-item>
+        <ion-icon name="logo-usd" item-left></ion-icon>
+        Cost
+        <ion-badge item-right>{{DrivingValues.cost}}</ion-badge>
+        </ion-item>
+
+        <ion-list-header>
+          Taxi
+        </ion-list-header>
+        <ion-item>
+        <ion-icon name="car" item-left></ion-icon>
+        CO2 emissions 
+        <ion-badge color="danger" item-right>{{DrivingValues.CO2Emissions.text}}</ion-badge>
+        </ion-item>
+        <ion-item>
+        <ion-icon name="logo-usd" item-left></ion-icon>
+        Cost
+        <ion-badge item-right>{{DrivingValues.taxiCost}}</ion-badge>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
-  </div>
 
 </ion-content>

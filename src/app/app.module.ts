@@ -9,6 +9,8 @@ import { ResetPasswordPage } from '../pages/reset-password/reset-password'
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ResultsPage } from '../pages/results/results';
+import { SuggestionPage } from '../pages/suggestion/suggestion';
+import { ResultPage } from '../pages/result/result';
 import { AuthData } from '../providers/auth-data'
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -23,6 +25,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     LoginPage,
     SignupPage,
     ResultsPage,
+    SuggestionPage,
+    ResultPage,
     ResetPasswordPage
   ],
   imports: [
@@ -38,6 +42,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     LoginPage,
     SignupPage,
     ResultsPage,
+    SuggestionPage,
+    ResultPage,
     ResetPasswordPage
   ],
   providers: [

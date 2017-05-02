@@ -1,7 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, Content, ViewController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { ResultsPage } from '../results/results';
+import { SuggestionPage } from '../suggestion/suggestion';
 
 declare var google;
  
@@ -13,15 +14,27 @@ declare var google;
 export class HomePage {
  
   @ViewChild('map') mapElement: ElementRef;
+  @ViewChild(Content) content: Content;
   map: any;
   labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; //label for the marker
   labelIndex = 0;
   origin: any;
   destination: any;
   directionsDisplay: any;
+  
+  //autocomplete
+  autocompleteItems: any;
+  autocomplete: any;
+  acService:any;
+  placesService: any;
  
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
-    
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController,
+    public viewCtrl: ViewController) {
+      this.acService = new google.maps.places.AutocompleteService();
+      this.autocompleteItems = [];
+        this.autocomplete = {
+            query: ''
+        };    
   }
  
   ionViewDidLoad(){
@@ -50,6 +63,60 @@ export class HomePage {
       var infoWindow = new google.maps.InfoWindow({map: this.map});
       infoWindow.setPosition(pos);
       infoWindow.setContent('You are here');
+
+      var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        this.map.addListener('bounds_changed', () => {
+          searchBox.setBounds(this.map.getBounds());
+        });
+
+        var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', () => {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          // Clear out the old markers.
+          markers.forEach((marker) => {
+            marker.setMap(null);
+          });
+          markers = [];
+
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach((place) => {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            this.addMarker(place.geometry.location);
+            this.destination = place.geometry.location;
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          this.map.fitBounds(bounds);
+        });
+
 
       //Add renderer to draw route
       this.directionsDisplay = new google.maps.DirectionsRenderer();
@@ -178,7 +245,7 @@ export class HomePage {
         }
       }
 
-          this.navCtrl.push(ResultsPage, {
+          this.navCtrl.push(SuggestionPage, {
               resWalking: res1,
               resDriving: res2,
               resBicycling: res3,
@@ -309,5 +376,43 @@ export class HomePage {
       }
     });
     alert.present();
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
+  chooseItem(item: any) {
+        console.log('modal > chooseItem > item > ', item.latLng);
+        this.destination = item.latLng;
+        this.addMarker(this.destination);
+        this.selectOption();
+    }
+
+  updateSearch() {
+        console.log('modal > updateSearch');
+        if (this.autocomplete.query == '') {
+            this.autocompleteItems = [];
+            return;
+        }
+        let self = this;
+        let config = { 
+            types:  ['geocode'], // other types available in the API: 'establishment', 'regions', and 'cities'
+            input: this.autocomplete.query, 
+            componentRestrictions: { country: 'CO' } 
+        }
+        this.acService.getPlacePredictions(config, function (predictions, status) {
+            console.log('modal > getPlacePredictions > status > ', status);
+            self.autocompleteItems = [];            
+            predictions.forEach(function (prediction) {              
+                self.autocompleteItems.push(prediction);
+            });
+        });
+        
+    }
+
+  update(){
+      this.content.resize();
+      //location.reload();
   }
 }

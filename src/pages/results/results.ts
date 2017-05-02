@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Platform } from 'ionic-angular';
 
 declare var google;
 /*
@@ -21,10 +21,12 @@ export class ResultsPage {
   resBicycling: any;
   DrivingValues: any;
   //for segment in view
-  travelMode: any;
+  travelMode: string = "walking";
+  isAndroid: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.travelMode = 'walking';
+  constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform) {
+    
+    this.isAndroid = platform.is('android');
     this.origin = this.navParams.get('origin');
     this.destination = this.navParams.get('destination');
     this.resWalking = this.navParams.get('resWalking');
@@ -33,7 +35,8 @@ export class ResultsPage {
     this.DrivingValues = {
       CO2Emissions: this.calcCO2Emissions('DRIVING', this.resDriving.distance.value),
       cost: this.calcMoneySpent('DRIVING', this.resDriving.distance.value),
-      gas: this.calcGasoline(this.resDriving.distance.value)
+      gas: this.calcGasoline(this.resDriving.distance.value),
+      taxiCost: this.calcMoneySpent('TAXI', this.resDriving.distance.value)
     };
   }
 
@@ -71,12 +74,26 @@ export class ResultsPage {
       var priceGallon = 8332; //pesos, from http://www.portafolio.co/economia/precios-de-la-gasolina-para-marzo-de-2017-503706
       var cost = priceGallon * (gkm * distance/1000);
       return '$'+ Math.ceil(cost);
+    }else if(travelMode == 'TAXI'){
+      var minimun = 5000; //from https://www.medellin.gov.co/movilidad/transito-transporte/taxis
+      var price78m = 87; //price every 78 meters
+      var startPrice = 3000;
+      var cost = (distance * price78m/78) + startPrice;
+      if(cost < minimun){
+        cost = minimun;
+      }
+      return '$' + Math.ceil(cost);
+
     }
     return null;
   }
 
   calcCaloriesBurn(distance){
     return distance * 20; //change value
+  }
+
+  changeSegment(travelModel){
+    this.travelMode = travelModel;
   }
 
 }

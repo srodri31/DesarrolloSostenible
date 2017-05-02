@@ -1,0 +1,50 @@
+<!--
+  Generated template for the Result page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Result</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content >
+  <ion-card >
+    <!--<img src="../../assets/img/walking_fingers.jpg"/> -->
+    <ion-card-content>
+      <ion-card-title>
+        {{result.name}}
+      </ion-card-title>
+      <ion-item>
+      <ion-icon name="swap" item-left></ion-icon>
+      Distance 
+      <ion-badge item-right>{{result.distance}}</ion-badge>
+      </ion-item>
+      <ion-item>
+      <ion-icon name="stopwatch" item-left></ion-icon>
+      Duration 
+      <ion-badge item-right>{{result.duration}}</ion-badge>
+      </ion-item>
+      <ion-item>
+      <ion-icon name="walk" item-left></ion-icon>
+      CO2 emissions 
+      <ion-badge  color="{{styleBadge(result.CO2Emissions.value)}}" item-right>{{result.CO2Emissions.text}}</ion-badge>
+      </ion-item>
+      <ion-item>
+      <ion-icon name="logo-usd" item-left></ion-icon>
+      Cost
+      <ion-badge item-right>{{result.cost}}</ion-badge>
+      </ion-item>
+      <ion-item *ngIf="result.gas">
+      <ion-icon name="timer" item-left></ion-icon>
+      Gas
+      <ion-badge item-right>{{result.gas}}</ion-badge>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
