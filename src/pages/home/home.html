@@ -1,6 +1,6 @@
   
   <ion-header>
-  <ion-navbar>
+  <ion-navbar color="secondary">
     <button ion-button menuToggle start>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -9,13 +9,23 @@
         <ion-icon name="refresh"></ion-icon>
       </button>
     </ion-buttons>-->
-     <input id="pac-input" class="controls" type="text"
+     <input id="pac-input" type="text"
         placeholder="Enter a location">
-
+    
   </ion-navbar>
 
 </ion-header>
 
 <ion-content>
+  <ion-fab left bottom #fab>
+      <button ion-fab color="secondary" mini><ion-icon name="navigate"></ion-icon></button>
+      <ion-fab-list side="right">
+        <button ion-fab (click)="seeRoute('walk', fab)"><ion-icon name="walk"></ion-icon></button>
+        <button ion-fab (click)="seeRoute('bicycle', fab)"><ion-icon name="bicycle"></ion-icon></button>
+        <button ion-fab (click)="seeRoute('car', fab)"><ion-icon name="car"></ion-icon></button>
+        <button ion-fab (click)="seeRoute('bus', fab)"><ion-icon name="bus"></ion-icon></button>
+      </ion-fab-list>
+    </ion-fab>
+
   <div #map id="map"></div>  
 </ion-content>

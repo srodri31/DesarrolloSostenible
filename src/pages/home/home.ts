@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, AlertController, Content, ViewController } from 'ionic-angular';
+import { NavController, AlertController, Content, ViewController, FabContainer } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { ResultsPage } from '../results/results';
 import { SuggestionPage } from '../suggestion/suggestion';
@@ -378,38 +378,27 @@ export class HomePage {
     alert.present();
   }
 
-  dismiss() {
-    this.viewCtrl.dismiss();
+  seeRoute(TravelMode, fab: FabContainer){
+    if(this.destination){
+      switch(TravelMode){
+        case 'walk':
+          this.calcRoute(google.maps.TravelMode.WALKING);
+          break;
+        case 'bicycle':
+          this.calcRoute(google.maps.TravelMode.WALKING);
+          break;
+        case 'car':
+          this.calcRoute(google.maps.TravelMode.DRIVING);
+          break;
+        case 'bus':
+          this.calcRoute(google.maps.TravelMode.TRANSIT);
+          break;
+      }
+    }else{
+      this.showAlert('First you have to mark a destination','Warning');
+    }
+    fab.close();
   }
-
-  chooseItem(item: any) {
-        console.log('modal > chooseItem > item > ', item.latLng);
-        this.destination = item.latLng;
-        this.addMarker(this.destination);
-        this.selectOption();
-    }
-
-  updateSearch() {
-        console.log('modal > updateSearch');
-        if (this.autocomplete.query == '') {
-            this.autocompleteItems = [];
-            return;
-        }
-        let self = this;
-        let config = { 
-            types:  ['geocode'], // other types available in the API: 'establishment', 'regions', and 'cities'
-            input: this.autocomplete.query, 
-            componentRestrictions: { country: 'CO' } 
-        }
-        this.acService.getPlacePredictions(config, function (predictions, status) {
-            console.log('modal > getPlacePredictions > status > ', status);
-            self.autocompleteItems = [];            
-            predictions.forEach(function (prediction) {              
-                self.autocompleteItems.push(prediction);
-            });
-        });
-        
-    }
 
   update(){
       this.content.resize();

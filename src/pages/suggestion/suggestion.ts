@@ -193,6 +193,7 @@ export class SuggestionPage {
     }
     this.content.resize();
     fab.close();
+    this.showAlert('The suggestions have been reordered!','Suggestions');
   }
 
   onlyDuration(){
