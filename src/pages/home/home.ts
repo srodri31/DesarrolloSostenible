@@ -209,7 +209,7 @@ export class HomePage {
         for (var j = 0; j < results.length; j++) {
           var element = results[j];
           var distance = element.distance;
-          var duration = element.duration.text;
+          var duration = element.duration;
           console.log('Walking: Distance:'+distance.text+' Duration: '+duration);
           var len = distance.length;
           //distance = distance.substring(0, len-3);
@@ -233,7 +233,7 @@ export class HomePage {
         for (var j = 0; j < results.length; j++) {
           var element = results[j];
           var distance = element.distance;
-          var duration = element.duration.text;
+          var duration = element.duration;
           console.log('Driving: Distance:'+distance.text+' Duration: '+duration);
           var len = distance.length;
           //distance = distance.substring(0, len-3);
@@ -257,20 +257,26 @@ export class HomePage {
   }
 
   calcDurationRideBicycle(distance): any{
+    var duration;
     var durationText = '';
     var speed = 13; //average speed in km/h
     //duration in meters
-    var duration = distance/(speed*1000); //convert km to m
-    if(duration >= 60){
+    var durationV = distance/(speed*1000); //convert km to m
+    var value = durationV;
+    if(durationV >= 60){
       console.log('duration in bike is greater than 1 h');
-      var hours = Math.floor(duration);
+      var hours = Math.floor(durationV);
       durationText = hours + ' h ';
-      duration = duration - hours;
+      durationV = durationV - hours;
     }
-    duration = duration * 60; //convert h to min
-    var min = Math.floor(duration);
+    durationV = durationV * 60; //convert h to min
+    var min = Math.floor(durationV);
     durationText = durationText + min + ' min';
-    return durationText;
+    duration = {
+      value: value,
+      text: durationText
+    }
+    return duration;
   }
 
   //to show route on map

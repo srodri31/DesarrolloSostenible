@@ -26,6 +26,8 @@ export class SuggestionPage {
   TaxiValues: any;
   WalkingValues: any;
   BicyclingValues: any;
+  suggestionTitle: string = 'Less emissions';
+
   //for segment in view
   travelMode: string = "walking";
   results = [];
@@ -67,7 +69,10 @@ export class SuggestionPage {
         value: 0,
         text: "0 g "
       },
-      cost: "$0"
+      cost: {
+        text: "$0",
+        value: 0
+      }
     };
     this.BicyclingValues = {
       name: "Bicycling",
@@ -78,7 +83,10 @@ export class SuggestionPage {
         value: 0,
         text: "0 g "
       },
-      cost: "$0"
+      cost: {
+        text: "$0",
+        value: 0
+      }
     };
 
     this.results.push(this.BicyclingValues);
@@ -121,21 +129,32 @@ export class SuggestionPage {
   }
 
   calcMoneySpent(travelMode, distance): any{
+    var cost;
     if(travelMode == 'DRIVING'){
       var mpg = 23.6; //miles per gallon
       var gkm = 1/mpg/1.60394; //gallon per km
       var priceGallon = 8332; //pesos, from http://www.portafolio.co/economia/precios-de-la-gasolina-para-marzo-de-2017-503706
-      var cost = priceGallon * (gkm * distance/1000);
-      return '$'+ Math.ceil(cost);
+      var value = priceGallon * (gkm * distance/1000);
+      var text = '$'+ Math.ceil(cost);
+      cost = {
+        value: value,
+        text: text
+      };
+      return cost;
     }else if(travelMode == 'TAXI'){
       var minimun = 5000; //from https://www.medellin.gov.co/movilidad/transito-transporte/taxis
       var price78m = 87; //price every 78 meters
       var startPrice = 3000;
-      var cost = (distance * price78m/78) + startPrice;
-      if(cost < minimun){
-        cost = minimun;
+      var value = (distance * price78m/78) + startPrice;
+      if(value < minimun){
+        value = minimun;
       }
-      return '$' + Math.ceil(cost);
+      var text = '$'+ Math.ceil(cost);
+      cost = {
+        value: value,
+        text: text
+      };
+      return cost;
 
     }
     return null;
@@ -166,28 +185,46 @@ export class SuggestionPage {
   }
 
   orderBy(Criteria: string, fab: FabContainer){
-    this.results = [];
+    //this.results = [];
     this.content.resize();
     switch(Criteria){
       case 'CO2':
-        this.results.push(this.WalkingValues);
-        this.results.push(this.BicyclingValues);
-        this.results.push(this.TaxiValues);
-        this.results.push(this.DrivingValues);
+        this.suggestionTitle = 'Less emissions';
+        this.results.sort((n1,n2)=> {
+          if (n1.CO2Emissions.value > n2.CO2Emissions.value) {
+            return 1;
+          }
+          if (n1.CO2Emissions.value < n2.CO2Emissions.value) {
+            return -1;
+          }
+          return 0;
+        });
         this.onlyCO2();
         break;
       case 'duration':
-        this.results.push(this.DrivingValues);
-        this.results.push(this.TaxiValues);
-        this.results.push(this.BicyclingValues);
-        this.results.push(this.WalkingValues);
+         this.suggestionTitle = 'Less time';
+         this.results.sort((n1,n2)=> {
+          if (n1.duration.value > n2.duration.value) {
+            return 1;
+          }
+          if (n1.duration.value < n2.duration.value) {
+            return -1;
+          }
+          return 0;
+        });
         this.onlyDuration();
         break;
       case 'cost':
-        this.results.push(this.BicyclingValues);
-        this.results.push(this.WalkingValues);
-        this.results.push(this.DrivingValues);
-        this.results.push(this.TaxiValues);
+        this.suggestionTitle = 'Less cost';
+        this.results.sort((n1,n2)=> {
+          if (n1.cost.value > n2.cost.value) {
+            return 1;
+          }
+          if (n1.cost.value < n2.cost.value) {
+            return -1;
+          }
+          return 0;
+        });
         this.onlyCost();
         break;
     }
@@ -223,4 +260,5 @@ export class SuggestionPage {
     alert.present();
   } 
 
+  
 }

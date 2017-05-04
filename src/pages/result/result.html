@@ -28,7 +28,7 @@
       <ion-item>
       <ion-icon name="stopwatch" item-left></ion-icon>
       Duration 
-      <ion-badge item-right>{{result.duration}}</ion-badge>
+      <ion-badge item-right>{{result.duration.text}}</ion-badge>
       </ion-item>
       <ion-item>
       <ion-icon name="walk" item-left></ion-icon>
@@ -38,7 +38,7 @@
       <ion-item>
       <ion-icon name="logo-usd" item-left></ion-icon>
       Cost
-      <ion-badge item-right>{{result.cost}}</ion-badge>
+      <ion-badge item-right>{{result.cost.text}}</ion-badge>
       </ion-item>
       <ion-item *ngIf="result.gas">
       <ion-icon name="timer" item-left></ion-icon>

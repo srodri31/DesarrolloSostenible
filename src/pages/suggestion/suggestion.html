@@ -15,25 +15,36 @@
 
 <ion-content padding>
     <ion-fab top right edge #fab>
-      <button ion-fab color="vibrant" mini><ion-icon name="reorder"></ion-icon></button>
+      <button ion-fab color="secondary" mini>
+        <ion-icon name="reorder"></ion-icon>
+      </button>
       <ion-fab-list>
-        <button ion-fab (click)="orderBy('CO2', fab)"><b>CO<sub>2</sub></b></button>
-        <button ion-fab (click)="orderBy('duration', fab)"><ion-icon name="stopwatch"></ion-icon></button>
-        <button ion-fab (click)="orderBy('cost', fab)"><ion-icon name="logo-usd"></ion-icon></button>
+        <button ion-fab (click)="orderBy('CO2', fab)" class="btn-fab-option">
+          <b>CO<sub>2</sub></b>
+        </button>
+        <button ion-fab (click)="orderBy('duration', fab)" class="btn-fab-option">
+          <ion-icon name="stopwatch"></ion-icon>
+        </button>
+        <button ion-fab (click)="orderBy('cost', fab)" class="btn-fab-option">
+          <ion-icon name="logo-usd"></ion-icon>
+        </button>
       </ion-fab-list>
     </ion-fab>
 
     <ion-list>
+      <ion-item>
+        <h1>{{suggestionTitle}}</h1>
+      </ion-item>
       <ion-item *ngFor="let result of results" >
         <ion-thumbnail item-left>
           <img src="{{result.img}}"/> 
         </ion-thumbnail>
         <h2>{{result.name}}</h2>
         <p><ion-badge>{{result.distance}}</ion-badge></p>
-        <p><ion-badge *ngIf="showDuration">{{result.duration}}</ion-badge></p>
+        <p><ion-badge *ngIf="showDuration">{{result.duration.text}}</ion-badge></p>
         <p><ion-badge color="{{styleBadge(result.CO2Emissions.value)}}"
           *ngIf="showCO2">{{result.CO2Emissions.text}} CO<sub>2</sub></ion-badge></p>
-        <p><ion-badge *ngIf="showCost">{{result.cost}}</ion-badge></p>
+        <p><ion-badge *ngIf="showCost">{{result.cost.text}}</ion-badge></p>
         <button ion-button clear item-right (click)="seeMore(result)">
           <ion-icon name="add-circle"></ion-icon>
         </button>
