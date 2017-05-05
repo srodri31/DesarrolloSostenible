@@ -15,7 +15,7 @@ export class ContactPage {
   public user: any;
 
   constructor(public navCtrl: NavController, public authData: AuthData) {
-    this.user = authData.user;
+    //this.user = authData.user;
   }
 
   logOut(){

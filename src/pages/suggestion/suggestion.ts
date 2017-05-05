@@ -135,7 +135,7 @@ export class SuggestionPage {
       var gkm = 1/mpg/1.60394; //gallon per km
       var priceGallon = 8332; //pesos, from http://www.portafolio.co/economia/precios-de-la-gasolina-para-marzo-de-2017-503706
       var value = priceGallon * (gkm * distance/1000);
-      var text = '$'+ Math.ceil(cost);
+      var text = '$'+ Math.ceil(value);
       cost = {
         value: value,
         text: text
@@ -149,7 +149,7 @@ export class SuggestionPage {
       if(value < minimun){
         value = minimun;
       }
-      var text = '$'+ Math.ceil(cost);
+      var text = '$'+ Math.ceil(value);
       cost = {
         value: value,
         text: text

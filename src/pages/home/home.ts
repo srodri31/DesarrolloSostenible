@@ -262,7 +262,7 @@ export class HomePage {
     var speed = 13; //average speed in km/h
     //duration in meters
     var durationV = distance/(speed*1000); //convert km to m
-    var value = durationV;
+    var value = durationV*60*60;
     if(durationV >= 60){
       console.log('duration in bike is greater than 1 h');
       var hours = Math.floor(durationV);
