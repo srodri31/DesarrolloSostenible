@@ -1,6 +1,5 @@
 {
   "name": "Sostenible",
   "app_id": "17312e59",
-  "v2": true,
-  "typescript": true
+  "type": "ionic-angular"
 }

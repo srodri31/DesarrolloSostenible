@@ -14,9 +14,9 @@ export class MyApp {
   zone : NgZone;
 
   constructor(authData: AuthData, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
-    this.rootPage = TabsPage;
+    this.rootPage = LoginPage;
     platform.ready().then(() => {
-      /*this.zone = new NgZone({});
+      this.zone = new NgZone({});
       const unsubscribe = authData.fireAuth.onAuthStateChanged((user) => {
         this.zone.run( () => {
           if (!user) {
@@ -27,7 +27,7 @@ export class MyApp {
             unsubscribe();
           }
         });     
-      });*/
+      });
       statusBar.styleDefault();
       splashScreen.hide();
     });
